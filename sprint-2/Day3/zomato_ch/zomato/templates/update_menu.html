@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update Menu</title>
+</head>
+
+<body>
+    <h1>Update Menu</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for form in dish_forms %}
+        {{ form.as_p }}
+        <hr>
+        {% endfor %}
+        <button type="submit">Update Menu</button>
+    </form>
+    <a href="{% url 'menu' %}">Back to Menu</a>
+</body>
+
+</html>

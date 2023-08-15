@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View Orders</title>
+</head>
+
+<body>
+    <h1>View Orders</h1>
+    <table>
+        <tr>
+            <th>Customer Name</th>
+            <th>Dish Name</th>
+            <th>Quantity</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.dish.name }}</td>
+            <td>{{ order.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'menu' %}">Back to Menu</a>
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zomato Menu</title>
+</head>
+<style>
+    nav {
+        margin: 0;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    .mainContainer {
+        width: 80%;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 20px;
+    }
+
+    .card {
+        padding: 10px 10px 10px 10px;
+        border: 2px solid grey;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        align-items: center;
+        justify-content: space-evenly;
+        box-shadow: 10px 10px 5px grey;
+    }
+
+    .card h2,
+    .card h3,
+    .card h5 {
+        margin: 0%;
+    }
+
+    nav a {
+        text-decoration: none;
+        padding: 5px 15px;
+        /* border: 1px solid grey; */
+        font-weight: bolder;
+        border-radius: 8px;
+        box-shadow: 2px 2px 10px grey;
+    }
+
+    nav a:hover {
+        box-shadow: 2px 5px 10px grey;
+        /* background-color: antiquewhite; */
+    }
+</style>
+
+<body>
+    <h1>Zomato Menu</h1>
+    <nav>
+        <a href="{% url 'add_dish' %}">Add New Dish</a>
+        <a href="{% url 'place_order' %}">Place an Order</a>
+        <a href="{% url 'update_menu' %}">Update the Menu</a>
+        <a href="{% url 'view_orders' %}">View All Orders</a>
+
+    </nav>
+    <h2>Item list</h2>
+    <div class="mainContainer">
+        {% for dish in dishes %}
+        <div class="card">
+            <h2>{{ dish.name }}</h2>
+            <h3>Price : {{ dish.price }} ₹</h3>
+            <h4>Qty left: {{dish.quantity}}</h4>
+            <h5>Status : {% if dish.quantity > 0 %}
+                Available
+                {% else %}
+                Not Available
+                {% endif %}</h5>
+        </div>
+
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>
