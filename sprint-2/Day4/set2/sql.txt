@@ -1,0 +1,67 @@
+**Problem 16:**
+Create a **`Restaurants`** table / collection with the fields defined above.
+        CREATE TABLE Restaurants (
+            id INT PRIMARY KEY,
+            name VARCHAR(100),
+            cuisine_type VARCHAR(100),
+            location VARCHAR(255),
+            average_rating DECIMAL(3,2),
+            delivery_available BOOLEAN
+        );
+
+
+**Problem 17:**
+Insert five rows / documents into the **`Restaurants`** table / collection with data of your choice.
+        INSERT INTO Restaurants (id, name, cuisine_type, location, average_rating, delivery_available) VALUES 
+        (1, 'Bistro Central', 'French', '123 Main St, New York, USA', 4.5, TRUE),
+        (2, 'Curry House', 'Indian', '456 Elm St, New York, USA', 4.2, FALSE),
+        (3, 'Sushi World', 'Japanese', '789 Maple Ave, San Francisco, USA', 4.8, TRUE),
+        (4, 'Taco Town', 'Mexican', '101 Pine Rd, Los Angeles, USA', 4.0, TRUE),
+        (5, 'Pasta Palace', 'Italian', '202 Oak Ln, Chicago, USA', 3.9, FALSE);
+
+**Problem 18:**
+Write a query to fetch all restaurants, ordered by **`average_rating`** in descending order.
+        SELECT * 
+        FROM Restaurants 
+        ORDER BY average_rating DESC;
+
+**Problem 19:**
+Write a query to fetch all restaurants that offer **`delivery_available`** and have an **`average_rating`** of more than 4.
+        SELECT * 
+        FROM Restaurants 
+        WHERE delivery_available = TRUE AND average_rating > 4;
+
+**Problem 20:**
+Write a query to fetch all restaurants where the **`cuisine_type`** field is not set or is null.
+        SELECT * 
+        FROM Restaurants 
+        WHERE cuisine_type IS NULL;
+
+**Problem 21:**
+Write a query to count the number of restaurants that have **`delivery_available`**.
+        SELECT COUNT(*) 
+        FROM Restaurants 
+        WHERE delivery_available = TRUE;
+
+**Problem 22:**
+Write a query to fetch all restaurants whose **`location`** contains 'New York'.
+        SELECT * 
+        FROM Restaurants 
+        WHERE location LIKE '%New York%';
+
+**Problem 23:**
+Write a query to calculate the average **`average_rating`** of all restaurants.
+        SELECT AVG(average_rating) 
+        FROM Restaurants;
+
+**Problem 24:**
+Write a query to fetch the top 5 restaurants when ordered by **`average_rating`** in descending order.
+        SELECT * 
+        FROM Restaurants 
+        ORDER BY average_rating DESC 
+        LIMIT 5;
+
+**Problem 25:**
+Write a query to delete the restaurant with **`id`** 3.
+        DELETE FROM Restaurants 
+        WHERE id = 3;
