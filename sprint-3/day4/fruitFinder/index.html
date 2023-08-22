@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Object Classifier</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #ddd;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #0af;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 1000px;
+            gap: 30px;
+        }
+
+        #webcam-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 3px solid #0af;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        #webcam-container::before {
+            content: "Place object here";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-style: italic;
+            color: #0af;
+            opacity: 0.7;
+        }
+
+        #details-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            width: 40%;
+            box-shadow: 0px 0px 15px #0af;
+            border-radius: 10px;
+        }
+
+        #label-container div {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #0af;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: transparent;
+            color: #0af;
+            padding: 10px 20px;
+            border: 2px solid #0af;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: bold;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: #0af;
+            color: #111;
+        }
+
+        h2 {
+            color: #0af;
+            border-bottom: 1px solid #0af;
+        }
+
+        p {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Intelligent Object Classifier</h1>
+<button type="button" onclick="init()">Start</button>
+
+<div class="container">
+    <div id="webcam-container"></div>
+    <div id="details-container">
+        <div id="label-container"></div>
+        <div id="fruitDetails"></div>
+    </div>
+</div>
+
+<!-- Tensorflow.js and Teachable Machine scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script>
+    const URL = "https://teachablemachine.withgoogle.com/models/vQm8hfrIv/";
+    let model, webcam, labelContainer, maxPredictions;
+
+    const fruitsData = {
+      "banana": {
+        "type": "fruit",
+        "nutritionalValue": "105 calories, 1.3g protein",
+        "origin": "Southeast Asia",
+        "seasonality": "All year"
+      },
+      "apple": {
+        "type": "fruit",
+        "nutritionalValue": "95 calories, 0.5g protein",
+        "origin": "Central Asia",
+        "seasonality": "Late summer to early winter"
+      },
+      "pear": {
+        "type": "fruit",
+        "nutritionalValue": "102 calories, 0.6g protein",
+        "origin": "Asia and Europe",
+        "seasonality": "Late summer to early winter"
+      },
+      "papaya": {
+        "type": "fruit",
+        "nutritionalValue": "120 calories, 0.5g protein",
+        "origin": "Central America",
+        "seasonality": "All year"
+      },
+      "orange": {
+        "type": "fruit",
+        "nutritionalValue": "62 calories, 1.2g protein",
+        "origin": "Southeast Asia",
+        "seasonality": "Winter"
+      }
+    };
+
+    async function init() {
+        const modelURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+
+        const flip = true;
+        webcam = new tmImage.Webcam(200, 200, flip);
+        await webcam.setup();
+        await webcam.play();
+        window.requestAnimationFrame(loop);
+
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+        labelContainer = document.getElementById("label-container");
+        for (let i = 0; i < maxPredictions; i++) {
+            labelContainer.appendChild(document.createElement("div"));
+        }
+    }
+
+    async function loop() {
+        webcam.update();
+        await predict();
+        window.requestAnimationFrame(loop);
+    }
+
+    async function predict() {
+        const prediction = await model.predict(webcam.canvas);
+        let highestProbability = 0;
+        let detectedFruit = null;
+
+        for (let i = 0; i < maxPredictions; i++) {
+            const classPrediction = prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+            labelContainer.childNodes[i].textContent = classPrediction;
+
+            if (prediction[i].probability > highestProbability) {
+                highestProbability = prediction[i].probability;
+                detectedFruit = prediction[i].className.toLowerCase();  // Ensure it matches the keys in the fruitsData
+            }
+        }
+
+        if (highestProbability > 0.75) {
+            displayFruitDetails(detectedFruit);
+        }
+    }
+
+    function displayFruitDetails(fruitName) {
+        const details = fruitsData[fruitName];
+        if (details && details.type === "fruit") {
+            document.getElementById('fruitDetails').innerHTML = `
+                <h2>${fruitName.charAt(0).toUpperCase() + fruitName.slice(1)}</h2>
+                <p>Nutrition: ${details.nutritionalValue}</p>
+                <p>Origin: ${details.origin}</p>
+                <p>Seasonality: ${details.seasonality}</p>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
