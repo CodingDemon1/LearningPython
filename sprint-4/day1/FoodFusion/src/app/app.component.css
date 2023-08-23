@@ -1,0 +1,31 @@
+.menu-grid {
+    width:90%;
+    margin: auto;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.filter-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+.menu-item {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid grey;
+    width: 200px;
+    height: 220px;
+    border-radius: 10px;
+}
+
+.menu-item p{
+    font-weight: bolder;
+}
+.menu-item img{
+    width: 95%;
+}

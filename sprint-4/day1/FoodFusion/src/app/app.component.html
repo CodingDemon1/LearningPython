@@ -1,0 +1,12 @@
+<div class="filter-form">
+  <label for="filter">Filter:</label>
+  <input type="text" id="filter" [(ngModel)]="filterTerm">
+  <button (click)="applyFilter()">Apply</button>
+</div>
+
+<div class="menu-grid">
+  <div class="menu-item" *ngFor="let dish of dishes">
+    <img [src]="dish.strMealThumb" alt="Dish Image">
+    <p>{{ dish.strMeal }}</p>
+  </div>
+</div>
