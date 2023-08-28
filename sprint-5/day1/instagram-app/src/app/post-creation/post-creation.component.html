@@ -1,0 +1,13 @@
+<div>
+    <h2>Create a post</h2>
+
+    <form (ngSubmit)="createPost()">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" [(ngModel)]="username" required>
+        <br>
+        <label for="caption">Caption</label>
+        <input type="text" name="caption" id="caption" [(ngModel)]="caption" required>
+        <br>
+        <button type="submit">Create</button>
+    </form>
+</div>
